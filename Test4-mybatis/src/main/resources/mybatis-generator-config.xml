@@ -1,0 +1,111 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- MyBatis-Generator 相关配置 -->
+<!DOCTYPE generatorConfiguration
+        PUBLIC "-//mybatis.org//DTD MyBatis Generator Configuration 1.0//EN"
+        "http://mybatis.org/dtd/mybatis-generator-config_1_0.dtd">
+
+<!-- 所有的配置均在根元素 generatorConfiguration 下 -->
+<generatorConfiguration>
+    <context id="mybatis-generator-test" targetRuntime="MyBatis3">
+        <!-- 使用``将字段包围，防止字段名使用关键字导致的sql错误 -->
+        <property name="autoDelimitKeywords" value="true"/>
+        <property name="beginningDelimiter" value="`"/>
+        <property name="endingDelimiter" value="`"/>
+
+        <!-- 使生成的 Model 实现 Serializable 接口  -->
+        <plugin type="org.mybatis.generator.plugins.SerializablePlugin"/>
+        <!--  为生成的 Model 覆写 toString() 方法 -->
+        <plugin type="org.mybatis.generator.plugins.ToStringPlugin"/>
+        <!--  为生成的 Model 覆写 equals() 和 hashCode() 方法 -->
+        <plugin type="org.mybatis.generator.plugins.EqualsHashCodePlugin"/>
+
+        <!-- 注解生成规则 -->
+        <commentGenerator>
+            <property name="suppressAllComments" value="true"/>
+            <property name="suppressDate" value="true"/>
+            <property name="dateFormat" value="yyyy/MM/dd"/>
+            <property name="addRemarkComments" value="true"/>
+        </commentGenerator>
+
+        <jdbcConnection driverClass="com.mysql.cj.jdbc.Driver"
+                        connectionURL="jdbc:mysql://127.0.0.1:3305/mybatis-test?useUnicode=true&amp;characterEncoding=UTF-8&amp;serverTimezone=UTC&amp;verifyServerCertificate=false&amp;useSSL=false&amp;nullCatalogMeansCurrent=true"
+                        userId="root"
+                        password="123456">
+
+            <!-- 若为 8.0 版本以上的 mysql-connector-java 驱动，需要设置 nullCatalogMeansCurrent = true -->
+            <!-- <property name="nullCatalogMeansCurrent" value="true"/> -->
+        </jdbcConnection>
+
+        <javaTypeResolver>
+            <!-- 是否强制使用 BigDecimal；
+                      默认为 false，把 JDBC 的 DECIMAL 和 NUMERIC 类型解析为 Integer；
+                      设置为 true 时，把 JDBC 的 DECIMAL 和 NUMERIC 类型解析为 java.math.BigDecimal
+                   -->
+            <property name="forceBigDecimals" value="true"/>
+
+            <!-- 设置时间类型的转换，
+                      默认 false，将所有 JDBC 的时间类型解析为 java.util.Date；
+                设置为 true 时，将 JDBC 的时间类型按如下规则解析：
+                  DATE	    -> java.time.LocalDate
+                  TIME	    -> java.time.LocalTime
+                  TIMESTAMP      -> java.time.LocalDateTime
+                  TIME_WITH_TIMEZONE  	-> java.time.OffsetTime
+                  TIMESTAMP_WITH_TIMEZONE 	-> java.time.OffsetDateTime
+               -->
+            <property name="useJSR310Types" value="true"/>
+        </javaTypeResolver>
+
+        <javaModelGenerator targetPackage="cn.arcy.testing.entities" targetProject="src/main/java">
+            <!-- 自动为每一个生成的类创建一个构造方法，构造方法包含了所有的 field，而不是使用 setter；
+     默认值为 false -->
+            <property name="constructorBased" value="false"/>
+
+            <!-- 在 targetPackage 的基础上，根据数据库的 schema 再生成一层 package，
+               最终生成的类放在这个package下；默认为false -->
+            <property name="enableSubPackages" value="false"/>
+
+            <!-- 是否创建一个不可变的类：如果为true，那么 MBG 生成的类会没有 setter 方法，
+               采用构造函数的方式来接收和设置每个字段的值，此时会忽略 constructorBased 属性的设置；
+               默认值为 false  -->
+            <property name="immutable" value="false"/>
+
+            <!-- 设置在 getter 方法中，是否对 String 类型的字段调用 trim() 方法；默认为 false -->
+            <property name="trimStrings" value="true"/>
+        </javaModelGenerator>
+
+        <!-- SQL Map 的 xml 文件生成器 -->
+        <sqlMapGenerator targetPackage="mappers" targetProject="src/main/resources">
+            <!-- 同 javaModelGenerator 元素中的配置  -->
+            <property name="enableSubPackages" value="false"/>
+        </sqlMapGenerator>
+
+        <!--  关于 Mapper 接口的生成 -->
+        <javaClientGenerator type="XMLMAPPER" targetPackage="cn.arcy.testing.mappers"
+                             targetProject="src/main/java">
+            <!-- 同 javaModelGenerator 元素中的配置  -->
+            <property name="enableSubPackages" value="false"/>
+        </javaClientGenerator>
+
+        <table tableName="users">
+            <!-- 默认为 false；如果设置为 true，生成的 model 类会直接使用 column 本身的名字，而不会再使用驼峰命名方法。比如 CREATE_DATE，生成的属性名字就是 CREATE_DATE,而不会是 createDate -->
+            <property name="useActualColumnNames" value="false"/>
+
+            <!-- 生成主键的方法，如果设置了该元素，MBG 会在生成的 <insert> 元素中生成一条正确的 <selectKey> 元素 -->
+            <generatedKey column="id" sqlStatement="MySql" identity="true"/>
+
+            <!-- 用来修改表中某个列的属性，MBG 会根据修改后的配置来生成 domain 的属性；
+               column：要重新设置的列名；一个 table 元素中可以定义多个 columnOverride 元素哈 -->
+            <!--<columnOverride column="show_status">
+                &lt;!&ndash; 使用 property 属性来指定列要生成的属性名称 &ndash;&gt;
+                <property name="property" value="showStatus"/>
+
+                &lt;!&ndash; javaType 用于指定生成的 domain 的属性类型，使用类型的全限定名&ndash;&gt;
+                <property name="javaType" value="java.lang.Integer"/>
+
+                &lt;!&ndash; jdbcType用于指定该列的JDBC类型
+                <property name="jdbcType" value=""/>
+                &ndash;&gt;
+            </columnOverride>-->
+        </table>
+    </context>
+</generatorConfiguration>
